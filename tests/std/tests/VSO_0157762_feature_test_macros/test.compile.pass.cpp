@@ -884,6 +884,20 @@ STATIC_ASSERT(__cpp_lib_gcd_lcm == 201606L);
 #endif
 #endif
 
+#if _HAS_CXX23 && defined(__cpp_lib_byte) && defined(__cpp_lib_concepts) // TRANSITION, GH-395
+#ifndef __cpp_lib_generator
+#error __cpp_lib_generator is not defined
+#elif __cpp_lib_generator != 202207L
+#error __cpp_lib_generator is not 202207L
+#else
+STATIC_ASSERT(__cpp_lib_generator == 202207L);
+#endif
+#else
+#ifdef __cpp_lib_generator
+#error __cpp_lib_generator is defined
+#endif
+#endif
+
 #ifndef __cpp_lib_generic_associative_lookup
 #error __cpp_lib_generic_associative_lookup is not defined
 #elif __cpp_lib_generic_associative_lookup != 201304L
