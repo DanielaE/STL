@@ -1,0 +1,93 @@
+#pragma once
+#ifndef _PRINT_
+#define _PRINT_
+
+#include <yvals_core.h>
+
+#include <format>
+
+extern void __std_print(_STD FILE *, const char *, _STD size_t);
+extern void __std_print(_STD FILE *, const wchar_t *, _STD size_t);
+
+_STD_BEGIN
+
+_EXPORT_STD inline void vprint_unicode(_STD FILE* _File, _STD string_view _Fmt, _STD format_args _Args) {
+    _STD string _Str;
+    _Str.reserve(_Fmt.size() + _Args._Estimate_required_capacity());
+    _STD vformat_to(_STD back_insert_iterator{_Str}, _Fmt, _Args);
+    ::__std_print(_File, _Str.data(), _Str.size());
+}
+
+_EXPORT_STD inline void vprint_unicode(_STD FILE* _File, _STD wstring_view _Fmt, _STD wformat_args _Args) {
+    _STD wstring _Str;
+    _Str.reserve(_Fmt.size() + _Args._Estimate_required_capacity());
+    _STD vformat_to(_STD back_insert_iterator{_Str}, _Fmt, _Args);
+    ::__std_print(_File, _Str.data(), _Str.size());
+}
+
+_EXPORT_STD inline void vprint_unicode(_STD string_view _Fmt, format_args _Args) {
+    _STD vprint_unicode(stdout, _Fmt, _Args);
+}
+
+_EXPORT_STD inline void vprint_unicode(_STD wstring_view _Fmt, wformat_args _Args) {
+    _STD vprint_unicode(stdout, _Fmt, _Args);
+}
+
+_EXPORT_STD template <typename... _Types>
+void print(const _STD format_string<_Types...> _Fmt, _Types&&... _Args) {
+    _STD vprint_unicode(_Fmt.get(), _STD make_format_args(_Args...));
+}
+
+_EXPORT_STD template <typename... _Types>
+void print(const _STD wformat_string<_Types...> _Fmt, _Types&&... _Args) {
+    _STD vprint_unicode(_Fmt.get(), _STD make_wformat_args(_Args...));
+}
+
+_EXPORT_STD template <typename... _Types>
+void print(_STD FILE* _File, const _STD format_string<_Types...> _Fmt, _Types&&... _Args) {
+    _STD vprint_unicode(_File, _Fmt.get(), _STD make_format_args(_Args...));
+}
+
+_EXPORT_STD template <typename... _Types>
+void print(_STD FILE* _File, const _STD wformat_string<_Types...> _Fmt, _Types&&... _Args) {
+    _STD vprint_unicode(_File, _Fmt.get(), _STD make_wformat_args(_Args...));
+}
+
+inline void vprintln_unicode(_STD FILE* _File, _STD string_view _Fmt, _STD format_args _Args) {
+    _STD string _Str;
+    _Str.reserve(_Fmt.size() + _Args._Estimate_required_capacity() + 1);
+    _STD vformat_to(_STD back_insert_iterator{_Str}, _Fmt, _Args);
+    _Str.push_back('\n');
+    ::__std_print(_File, _Str.data(), _Str.size());
+}
+
+inline void vprintln_unicode(_STD FILE* _File, _STD wstring_view _Fmt, _STD wformat_args _Args) {
+    _STD wstring _Str;
+    _Str.reserve(_Fmt.size() + _Args._Estimate_required_capacity() + 1);
+    _STD vformat_to(_STD back_insert_iterator{_Str}, _Fmt, _Args);
+    _Str.push_back(L'\n');
+    ::__std_print(_File, _Str.data(), _Str.size());
+}
+_EXPORT_STD template <typename... _Types>
+void println(const _STD format_string<_Types...> _Fmt, _Types&&... _Args) {
+    _STD vprintln_unicode(stdout, _Fmt.get(), _STD make_format_args(_Args...));
+}
+
+_EXPORT_STD template <typename... _Types>
+void println(const _STD wformat_string<_Types...> _Fmt, _Types&&... _Args) {
+    _STD vprintln_unicode(stdout, _Fmt.get(), _STD make_format_args(_Args...));
+}
+
+_EXPORT_STD template <typename... _Types>
+void println(_STD FILE* _File, const _STD format_string<_Types...> _Fmt, _Types&&... _Args) {
+    _STD vprintln_unicode(_File, _Fmt.get(), _STD make_format_args(_Args...));
+}
+
+_EXPORT_STD template <typename... _Types>
+void println(_STD FILE* _File, const _STD wformat_string<_Types...> _Fmt, _Types&&... _Args) {
+    _STD vprintln_unicode(_File, _Fmt.get(), _STD make_format_args(_Args...));
+}
+
+_STD_END
+
+#endif // _PRINT_
