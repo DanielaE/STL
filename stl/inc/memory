@@ -3716,6 +3716,34 @@ _NODISCARD_ASSUME_ALIGNED constexpr _Ty* assume_aligned(_Ty* const _Ptr) noexcep
         return static_cast<_Ty*>(__builtin_assume_aligned(_Ptr, _Nx));
     }
 }
+
+template <typename T>
+concept ImplicitLifetime = _STD is_trivial_v<T> && _STD is_trivially_destructible_v<T>;
+
+_EXPORT_STD template <_STD ImplicitLifetime T>
+auto start_lifetime_as(void * Bytes) noexcept -> T * {
+    static_assert(sizeof(T) > 0, "type T is incomplete");
+    return new (Bytes) T;
+}
+
+_EXPORT_STD template <_STD ImplicitLifetime T>
+auto start_lifetime_as(const void * Bytes) noexcept -> const T * {
+    static_assert(sizeof(T) > 0, "type T is incomplete");
+    return new (Bytes) const T;
+}
+
+_EXPORT_STD template <_STD ImplicitLifetime T>
+auto start_lifetime_as(volatile void * Bytes) noexcept -> volatile T * {
+    static_assert(sizeof(T) > 0, "type T is incomplete");
+    return new (Bytes) volatile T;
+}
+
+_EXPORT_STD template <_STD ImplicitLifetime T>
+auto start_lifetime_as(const volatile void * Bytes) noexcept -> const volatile T * {
+    static_assert(sizeof(T) > 0, "type T is incomplete");
+    return new (Bytes) const volatile T;
+}
+
 #endif // _HAS_CXX20
 
 _EXTERN_C
